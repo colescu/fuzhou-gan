@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>撫州話</title>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <input
+      type="text"
+      id="userInput"
+      placeholder="請輸入文本"
+      oninput="updateOutput()"
+    />
+    <div id="output"></div>
+
+    <script>
+      function updateOutput() {
+        let input = document.getElementById("userInput").value;
+        let output = getPronunciation(input);
+        document.getElementById("output").innerText = output;
+      }
+    </script>
+  </body>
+</html>
