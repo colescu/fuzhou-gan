@@ -17,7 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function fetchDictionary() {
+<<<<<<< Updated upstream
   fetch("https://colescu.github.io/fuzhou-gan-online-dictionary/data/dictionary.csv")
+=======
+  fetch(
+    "https://colescu.github.io/fuzhou-gan-online-dictionary/data/dictionary.csv"
+  )
+>>>>>>> Stashed changes
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error. Status: ${response.status}`);
