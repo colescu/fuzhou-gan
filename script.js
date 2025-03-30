@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function fetchDictionary() {
-  fetch("https://colescu.github.io/fuzhou-gan-online-dictionary/dictionary.csv")
+  fetch("https://colescu.github.io/fuzhou-gan-online-dictionary/data/dictionary.csv")
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error. Status: ${response.status}`);
