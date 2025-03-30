@@ -4,23 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>撫州話</title>
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="script.js" defer></script>
   </head>
   <body>
-    <input
-      type="text"
-      id="userInput"
-      placeholder="請輸入文本"
-      oninput="updateOutput()"
-    />
-    <div id="output"></div>
-
-    <script>
-      function updateOutput() {
-        let input = document.getElementById("userInput").value;
-        let output = getPronunciation(input);
-        document.getElementById("output").innerText = output;
-      }
-    </script>
+    <div id="transcriptor">
+      <h1>撫州話注音</h1>
+      <textarea id="input" placeholder="請輸入文本"></textarea>
+      <div id="output"></div>
+    </div>
   </body>
 </html>
