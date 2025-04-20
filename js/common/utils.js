@@ -5,6 +5,8 @@ export function isChineseCharacter(char) {
 }
 
 function getVariants(character) {
+  // Returns a list of all related Traditional forms of a character
+
   const variants = new Set([character]);
   if (character in window.S2T) {
     variants.add(...window.S2T[character]);
@@ -19,7 +21,7 @@ function getVariants(character) {
   return variants;
 }
 
-export function getPronunciation(character) {
+export function getPronunciations(character) {
   if (!isChineseCharacter(character)) return [];
 
   const variants = getVariants(character);
@@ -31,5 +33,3 @@ export function getPronunciation(character) {
   });
   return pronunciations;
 }
-
-// 處理簡繁轉換、異體字

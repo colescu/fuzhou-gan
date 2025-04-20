@@ -1,9 +1,4 @@
-// import { isChineseCharacter } from "./utils";
-export function isChineseCharacter(char) {
-  const chineseRegex = /[\u4e00-\u9fff]/; // CJK ideographs
-  const punctuationRegex = /[\u3000-\u303F\uFF00-\uFFEF\u2000-\u206F]/; // CJK punctuation marks
-  return chineseRegex.test(char) && !punctuationRegex.test(char);
-}
+import { isChineseCharacter } from "./utils.js";
 
 export default class Interlinear {
   constructor(containerId, id, character, pronunciations) {
@@ -21,6 +16,7 @@ export default class Interlinear {
     interlinear.id = `interlinear-${this.id}`;
 
     const spanCharacter = document.createElement("span");
+    spanCharacter.className = "character";
     spanCharacter.textContent = this.character;
     if (this.pronunciations.length > 1) {
       spanCharacter.style.textDecoration = "underline";
@@ -28,7 +24,6 @@ export default class Interlinear {
     interlinear.appendChild(spanCharacter);
 
     const selectMenu = document.createElement("select");
-    selectMenu.className = "select-menu";
     selectMenu.style.display = "none";
     this.pronunciations.forEach((pronunciation, index) => {
       const option = document.createElement("option");
@@ -57,13 +52,17 @@ export default class Interlinear {
     });
     interlinear.appendChild(selectMenu);
 
-    const spanIPA = document.createElement("span");
-    spanIPA.className = "ipa";
-    interlinear.appendChild(spanIPA);
+    if (window.showIPA) {
+      const spanIPA = document.createElement("span");
+      spanIPA.className = "ipa";
+      interlinear.appendChild(spanIPA);
+    }
 
-    const spanPinyin = document.createElement("span");
-    spanPinyin.className = "pinyin";
-    interlinear.appendChild(spanPinyin);
+    if (window.showPinyin) {
+      const spanPinyin = document.createElement("span");
+      spanPinyin.className = "pinyin";
+      interlinear.appendChild(spanPinyin);
+    }
 
     this.container.appendChild(interlinear);
 
@@ -78,10 +77,14 @@ export default class Interlinear {
     const interlinear = this.container.querySelector(`#interlinear-${this.id}`);
     const selectedPronunciation =
       this.pronunciations[this.selectedValue].syllable;
-    const spanIPA = interlinear.querySelector(".ipa");
-    spanIPA.textContent = selectedPronunciation.showIPA("letter"); // TODO
-    const spanPinyin = interlinear.querySelector(".pinyin");
-    spanPinyin.textContent = selectedPronunciation.showPinyin();
+    if (window.showIPA) {
+      const spanIPA = interlinear.querySelector(".ipa");
+      spanIPA.textContent = selectedPronunciation.showIPA("letter"); // TODO
+    }
+    if (window.showPinyin) {
+      const spanPinyin = interlinear.querySelector(".pinyin");
+      spanPinyin.textContent = selectedPronunciation.showPinyin();
+    }
   }
 
   handleNotFound() {

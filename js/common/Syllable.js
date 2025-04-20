@@ -24,7 +24,7 @@ const IPA_TO_PINYIN_MAP = {
     // 介音
     j: "i",
     w: "u",
-    ɥ: "ü",
+    ɥ: "y",
   },
   nucleus: {
     // 韻腹
@@ -51,24 +51,24 @@ const IPA_TO_PINYIN_MAP = {
 };
 
 const CODA_STRICT_IPA_MAP = {
-  p: "p̚",
-  t: "t̚",
-  k: "k̚",
-  ʔ: "ʔ̚",
+  p: "p",
+  t: "t",
+  k: "k",
+  ʔ: "ʔ",
   i: "ɪ",
   u: "ʊ",
 };
 
 const TONE_NOTATION_MAP = {
   0: { name: "輕聲", numeral: "", letter: "", diacritic: "" },
-  1: { name: "陰平", numeral: "22", letter: "˨", diacritic: "̄" },
-  2: { name: "陽平", numeral: "24", letter: "˨˦", diacritic: "́" },
-  3: { name: "陰上", numeral: "45", letter: "˦˥", diacritic: "̂" },
+  1: { name: "陰平", numeral: "²²", letter: "˨", diacritic: "̄" },
+  2: { name: "陽平", numeral: "²⁴", letter: "˨˦", diacritic: "́" },
+  3: { name: "陰上", numeral: "⁴⁵", letter: "˦˥", diacritic: "̂" },
   // 陽上消失 (> 陽去)
-  5: { name: "陰去", numeral: "52", letter: "˥˨", diacritic: "̀" },
-  6: { name: "陽去", numeral: "22", letter: "˨", diacritic: "̄" }, // 新派混入陰平
-  7: { name: "陰入", numeral: "2", letter: "˨", diacritic: "̄" },
-  8: { name: "陽入", numeral: "5", letter: "˥", diacritic: "̂" },
+  5: { name: "陰去", numeral: "⁵²", letter: "˥˨", diacritic: "̀" },
+  6: { name: "陽去", numeral: "²²", letter: "˨", diacritic: "̄" }, // 新派混入陰平
+  7: { name: "陰入", numeral: "²", letter: "˨", diacritic: "̄" },
+  8: { name: "陽入", numeral: "⁵", letter: "˥", diacritic: "̂" },
 };
 
 export default class Syllable {
