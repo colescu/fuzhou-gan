@@ -20,7 +20,7 @@ function parseDictionary(csvText) {
 }
 
 function fetchDictionary() {
-  fetch("/data/dictionary.csv")
+  fetch("/fuzhou-gan/data/dictionary.csv")
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error. Status: ${response.status}`);

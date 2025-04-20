@@ -17,10 +17,11 @@
     <div class="main"></div>
 
     <script>
-      fetch("/md/phonology.md")
+      fetch("/fuzhou-gan/md/phonology.md")
         .then((res) => res.text())
         .then((md) => {
-          document.getElementById("main").innerHTML = marked.parse(md);
+          document.getElementsByClassName("main")[0].innerHTML =
+            marked.parse(md);
         });
     </script>
   </body>
