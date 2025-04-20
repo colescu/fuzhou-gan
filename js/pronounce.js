@@ -20,9 +20,7 @@ function parseDictionary(csvText) {
 }
 
 function fetchDictionary() {
-  fetch(
-    "https://colescu.github.io/fuzhou-gan-online-dictionary/data/dictionary.csv"
-  )
+  fetch("https://colescu.github.io/fuzhou-gan/data/dictionary.csv")
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error. Status: ${response.status}`);
