@@ -1,0 +1,79 @@
+:root {
+  --colescu: #008778;
+  --gray: #f0f0f0;
+}
+
+body {
+  justify-content: center;
+  margin: 0;
+}
+
+main {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 5em;
+}
+
+h1 {
+  font-size: 1.5em;
+  font-weight: normal;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 2em auto;
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  text-align: center;
+  padding: 0.2em 1em;
+}
+
+th {
+  background-color: var(--gray);
+}
+
+table ruby rt {
+  all: unset;
+  display: inline;
+  font-size: 1em !important;
+  padding-left: 0.3em !important;
+}
+
+.n-layout {
+  font-family: "Noto Sans";
+}
+
+.n-switch {
+  display: flex;
+  align-items: center;
+}
+
+.highlight {
+  background-color: var(--gray);
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.pinyin {
+  font-style: italic;
+}
+
+.reading-type {
+  vertical-align: bottom;
+  font-size: smaller;
+}
+
+img {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+figure {
+  text-align: center;
+}
