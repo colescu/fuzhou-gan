@@ -29,7 +29,7 @@ import Tone from "../content/FGPhonology/tone.md";
 </template>
 
 <style scoped>
-::v-deep table td:last-child {
+:deep(table td:last-child) {
   text-align: left;
 }
 </style>

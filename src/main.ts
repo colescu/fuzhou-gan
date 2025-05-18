@@ -8,16 +8,20 @@ import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import fetchData from "./lib/fetchData";
 import CharacterRuby from "./components/CharacterRuby.vue";
 
-const app = createApp(App);
+async function bootstrap() {
+  const app = createApp(App);
 
-await fetchData();
+  await fetchData();
 
-app.use(router);
+  app.use(router);
 
-const pinia = createPinia();
-pinia.use(piniaPluginPersistedstate);
-app.use(pinia);
+  const pinia = createPinia();
+  pinia.use(piniaPluginPersistedstate);
+  app.use(pinia);
 
-app.component("CharacterRuby", CharacterRuby);
+  app.component("CharacterRuby", CharacterRuby);
 
-app.mount("#app");
+  app.mount("#app");
+}
+
+bootstrap();

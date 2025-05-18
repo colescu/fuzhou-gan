@@ -6,6 +6,9 @@ import multimdTable from "markdown-it-multimd-table";
 
 // https://vite.dev/config/
 export default defineConfig({
+  esbuild: {
+    target: "esnext",
+  },
   base: process.env.NODE_ENV === "production" ? "/fuzhou-gan/" : "/",
   resolve: {
     alias: {

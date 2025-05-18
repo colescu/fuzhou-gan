@@ -23,4 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
+# Temporary or test files
 **/__*
