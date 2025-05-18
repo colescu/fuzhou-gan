@@ -106,7 +106,7 @@ const activeTab = toRef(cache.search, "tab");
       >
         <n-tab-pane name="char" tab="依字">
           <n-space align="center">
-            <n-form inline @submit.prevent="searchChar">
+            <n-form inline style="max-width: 95%" @submit.prevent="searchChar">
               <n-form-item>
                 <n-input
                   v-model:value="formChar"
@@ -123,7 +123,7 @@ const activeTab = toRef(cache.search, "tab");
 
         <n-tab-pane name="MC" tab="依中古漢語">
           <n-form inline :model="formMC" @submit.prevent="searchMC(formMC)">
-            <n-grid :cols="4" :x-gap="24">
+            <n-grid cols="2 600:4" :x-gap="24">
               <n-form-item-gi
                 v-for="item of FormMCUtils.ITEMS"
                 :label="item"
@@ -140,7 +140,7 @@ const activeTab = toRef(cache.search, "tab");
                 />
               </n-form-item-gi>
               <n-form-item-gi
-                :offset="2"
+                offset="0 600:2"
                 style="
                   display: flex;
                   align-items: flex-end;
@@ -155,7 +155,7 @@ const activeTab = toRef(cache.search, "tab");
 
         <n-tab-pane name="FG" tab="依撫州話">
           <n-form inline :model="formFG" @submit.prevent="searchFG(formFG)">
-            <n-grid :cols="4" :x-gap="24">
+            <n-grid cols="2 600:4" :x-gap="24">
               <n-form-item-gi
                 v-for="item of FormFGUtils.ITEMS"
                 :label="item"
@@ -171,7 +171,7 @@ const activeTab = toRef(cache.search, "tab");
                 />
               </n-form-item-gi>
               <n-form-item-gi
-                :offset="2"
+                offset="0 600:2"
                 style="
                   display: flex;
                   align-items: flex-end;
@@ -227,4 +227,8 @@ const activeTab = toRef(cache.search, "tab");
   </n-space>
 </template>
 
-<style scoped></style>
+<style scoped>
+.n-form-item-gi {
+  min-width: 5em;
+}
+</style>

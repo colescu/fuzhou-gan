@@ -19,9 +19,29 @@ h1 {
   font-weight: normal;
 }
 
+img {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+figure {
+  text-align: center;
+}
+
+/* table */
+
+.scrollable {
+  overflow-x: auto;
+  height: 100%;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
 table {
   border-collapse: collapse;
   margin: 2em auto;
+  min-width: max-content;
 }
 
 th,
@@ -33,6 +53,7 @@ td {
 
 th {
   background-color: var(--gray);
+  font-weight: normal;
 }
 
 table ruby rt {
@@ -42,6 +63,8 @@ table ruby rt {
   padding-left: 0.3em !important;
 }
 
+/* Naive UI */
+
 .n-layout {
   font-family: "Noto Sans";
 }
@@ -50,6 +73,8 @@ table ruby rt {
   display: flex;
   align-items: center;
 }
+
+/* custom classes */
 
 .highlight {
   background-color: var(--gray);
@@ -68,12 +93,20 @@ table ruby rt {
   font-size: smaller;
 }
 
-img {
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  display: inline-block;
+.parallel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-figure {
-  text-align: center;
+/* for mobile devices */
+
+@media (max-width: 600px) {
+  main {
+    width: 90%;
+  }
+
+  .parallel {
+    flex-direction: column;
+  }
 }

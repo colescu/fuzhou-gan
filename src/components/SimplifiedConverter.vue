@@ -57,6 +57,13 @@ onMounted(async () => {
       childList: true,
       subtree: true,
     });
+
+    const portalRoot =
+      document.querySelector(".n-popover-portal") || document.body;
+    observer.observe(portalRoot, {
+      childList: true,
+      subtree: true,
+    });
   }
 });
 

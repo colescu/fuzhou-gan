@@ -10,7 +10,7 @@ import Tone from "../content/FGPhonology/tone.md";
     <n-tabs type="line" animated>
       <n-tab-pane name="FG" tab="聲韻調與拼音">
         <br />
-        <n-tabs type="card" placement="left" animated>
+        <n-tabs type="card" animated>
           <n-tab-pane name="initial" tab="聲母">
             <Initial />
           </n-tab-pane>

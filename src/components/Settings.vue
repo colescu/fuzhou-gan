@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { useSettingsStore } from "../stores/settings";
+import { FGUtils } from "../lib/FGSyllable";
 
 import {
   NSpace,
@@ -15,8 +16,7 @@ import {
   NRadioButton,
   NCheckbox,
 } from "naive-ui";
-import { SettingsOutline } from "@vicons/ionicons5";
-import { FGUtils } from "../lib/FGSyllable";
+import { SettingsOutline, HelpOutline } from "@vicons/ionicons5";
 
 const route = useRoute();
 const settings = useSettingsStore();
@@ -24,18 +24,6 @@ const settings = useSettingsStore();
 const hasBoth = computed<boolean>(() => ["/pronounce"].includes(route.path));
 const hasSearch = computed<boolean>(() =>
   ["/search", "/pronounce"].includes(route.path)
-);
-
-const explanationMap: Record<string, string> = {
-  "/search": ``,
-  "/pronounce": `
-    在文本框中輸入文本即可生成撫州話注音。<br />
-    點擊字可查看字條詳情。<br />
-    多音字由<span class="highlight">灰色陰影</span>標出，請手動選擇正確讀音。
-  `,
-};
-const explanation = computed<string | undefined>(
-  () => explanationMap[route.path]
 );
 </script>
 
@@ -48,7 +36,23 @@ const explanation = computed<string | undefined>(
     {{ settings.isSimplified ? "简" : "繁" }}
   </n-float-button>
 
-  <n-popover trigger="click">
+  <n-popover v-if="hasBoth" style="width: 300px" trigger="click">
+    <template #trigger>
+      <n-float-button :right="16" :bottom="66">
+        <n-icon>
+          <HelpOutline />
+        </n-icon>
+      </n-float-button>
+    </template>
+
+    <template v-if="route.path === '/pronounce'">
+      在文本框中輸入文本即可生成撫州話注音。<br />
+      點擊字可查看字條詳情。<br />
+      多音字由<span class="highlight">灰色陰影</span>標出，請手動選擇正確讀音。
+    </template>
+  </n-popover>
+
+  <n-popover style="min-width: max-content" trigger="click">
     <template #trigger>
       <n-float-button :right="16" :bottom="16">
         <n-icon>
@@ -57,12 +61,7 @@ const explanation = computed<string | undefined>(
       </n-float-button>
     </template>
 
-    <n-space vertical>
-      <n-space v-if="explanation">
-        <n-tag>說明</n-tag>
-        <n-text v-html="explanation" />
-      </n-space>
-
+    <n-space vertical style="margin: 0.5em 0">
       <n-space align="center">
         <n-tag>注音</n-tag>
         <n-switch
@@ -108,15 +107,15 @@ const explanation = computed<string | undefined>(
           <template #checked> 開 </template>
           <template #unchecked> 関 </template>
         </n-switch>
-        聲調記法：
-        <n-radio-group
-          v-model:value="settings.pinyinToneNotation"
-          class="after-text"
-          size="small"
-        >
-          <n-radio-button value="number">調號 a3</n-radio-button>
-          <n-radio-button value="diacritic">变音符 â</n-radio-button>
-        </n-radio-group>
+        <n-space align="center">
+          <n-radio-group
+            v-model:value="settings.pinyinToneNotation"
+            size="small"
+          >
+            <n-radio-button value="number">調號 a3</n-radio-button>
+            <n-radio-button value="diacritic">变音符 â</n-radio-button>
+          </n-radio-group>
+        </n-space>
       </n-space>
 
       <n-space align="center">
@@ -125,15 +124,12 @@ const explanation = computed<string | undefined>(
           <template #checked> 開 </template>
           <template #unchecked> 関 </template>
         </n-switch>
-        聲調記法：
-        <n-radio-group
-          v-model:value="settings.ipaToneNotation"
-          class="after-text"
-          size="small"
-        >
-          <n-radio-button value="letter">字母 a˦˥</n-radio-button>
-          <n-radio-button value="numeral">數字 a⁴⁵</n-radio-button>
-        </n-radio-group>
+        <n-space align="center">
+          <n-radio-group v-model:value="settings.ipaToneNotation" size="small">
+            <n-radio-button value="letter">字母 a˦˥</n-radio-button>
+            <n-radio-button value="numeral">數字 a⁴⁵</n-radio-button>
+          </n-radio-group>
+        </n-space>
       </n-space>
 
       <n-space v-if="hasSearch" align="center">
@@ -146,8 +142,4 @@ const explanation = computed<string | undefined>(
   </n-popover>
 </template>
 
-<style scoped>
-.after-text {
-  margin-left: -0.8em;
-}
-</style>
+<style scoped></style>
