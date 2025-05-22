@@ -5,7 +5,9 @@ import { useSettingsStore } from "../stores/settings";
 function getAudioUrl(pronunciation: string): string {
   const tone = pronunciation[pronunciation.length - 1];
   const equivalentTone = ["0", "6"].includes(tone) ? "1" : tone;
-  return `/audio/${pronunciation.slice(0, -1) + equivalentTone}.wav`;
+  return `${
+    process.env.NODE_ENV === "production" ? import.meta.env.BASE_URL : ""
+  }/audio/${pronunciation.slice(0, -1) + equivalentTone}.wav`;
 }
 
 export function useAudio(pronunciation: string) {
@@ -100,7 +102,6 @@ function useSequentialAudio(
     } else {
       start();
     }
-    isPlaying.value = !isPlaying.value;
   }
 
   return { start, stop, toggleAudio };
