@@ -14,6 +14,7 @@ export const useSettingsStore = defineStore("settings", {
     includePredicted: true,
     displayPronunciation: true,
     isSimplified: true,
+    playSpeed: 500,
   }),
   persist: true,
 });

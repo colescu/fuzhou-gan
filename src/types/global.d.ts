@@ -36,5 +36,10 @@ declare global {
     廣韻釋義: string;
   }
 
+  type RubyData = {
+    character: string;
+    pronunciation: string;
+  };
+
   type SettingsStore = _SettingsStore;
 }

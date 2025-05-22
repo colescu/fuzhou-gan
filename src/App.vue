@@ -2,24 +2,48 @@
 import SimplifiedConverter from "./components/SimplifiedConverter.vue";
 import NavBar from "./components/NavBar.vue";
 import Settings from "./components/Settings.vue";
-import { NConfigProvider, NMessageProvider, zhCN } from "naive-ui";
+import {
+  NConfigProvider,
+  NMessageProvider,
+  zhCN,
+  NLayout,
+  NLayoutHeader,
+  NLayoutContent,
+} from "naive-ui";
+
+const themeOverrides = {
+  common: {},
+};
 </script>
 
 <template>
-  <n-config-provider :locale="zhCN">
+  <n-config-provider :locale="zhCN" :theme-overrides="themeOverrides">
     <n-message-provider>
       <SimplifiedConverter>
-        <div id="app">
-          <NavBar />
-          <main>
+        <n-layout>
+          <n-layout-header>
+            <NavBar />
+          </n-layout-header>
+          <n-layout-content>
             <RouterView />
-          </main>
-        </div>
-        <div style="height: 3em"></div>
+          </n-layout-content>
+        </n-layout>
         <Settings />
       </SimplifiedConverter>
     </n-message-provider>
   </n-config-provider>
 </template>
 
-<style scoped></style>
+<style scoped>
+.n-layout-content {
+  width: 80%;
+  margin: 5em auto;
+  overflow: visible;
+}
+
+@media (max-width: 600px) {
+  .n-layout-content {
+    width: 90%;
+  }
+}
+</style>

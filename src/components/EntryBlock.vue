@@ -1,19 +1,16 @@
 <script setup lang="ts">
-import { FGUtils } from "../lib/FGSyllable";
-import { useSettingsStore } from "../stores/settings";
-
+import Pronunciation from "./Pronunciation.vue";
 import { NCard, NSpace, NTag, NEllipsis } from "naive-ui";
 
 defineProps<{
   entry: Entry;
 }>();
-
-const settings = useSettingsStore();
 </script>
 
 <template>
+  <!-- TODO design -->
   <n-card>
-    <n-space align="center">
+    <div class="block">
       <span style="font-size: 3em; margin-right: 0.1em">
         {{ entry.字頭 }}
       </span>
@@ -23,24 +20,21 @@ const settings = useSettingsStore();
           <n-space align="center">
             <n-tag size="small"> 記錄音 </n-tag>
             <span v-if="entry.撫州話">
-              <span :class="settings.phoneticAlphabet">
-                {{ FGUtils.showPronunciation(entry.撫州話, settings) }} </span
-              ><span v-if="entry.文白新" class="reading-type"
+              <Pronunciation :pronunciation="entry.撫州話" /><span
+                v-if="entry.文白新"
+                class="reading-type"
                 >&nbsp;{{ entry.文白新 }}</span
               ><span v-if="entry.訓作"
-                >&nbsp;{{ `訓作「${entry.訓作}」` }}</span
+                >&nbsp;&nbsp;{{ `訓作「${entry.訓作}」` }}</span
               >
             </span>
             <span v-else>無</span>
           </n-space>
           <n-space v-if="entry.推導撫州話 !== ''" align="center">
             <n-tag size="small"> 推導音 </n-tag>
-            <span
-              v-if="entry.推導撫州話 !== entry.撫州話"
-              :class="settings.phoneticAlphabet"
-            >
-              {{ "*" + FGUtils.showPronunciation(entry.推導撫州話, settings) }}
-            </span>
+            <span v-if="entry.推導撫州話 !== entry.撫州話"
+              >*<Pronunciation :pronunciation="entry.推導撫州話"
+            /></span>
             <span v-else>同</span>
           </n-space>
           <n-space v-if="entry.釋義" align="center">
@@ -62,7 +56,7 @@ const settings = useSettingsStore();
           </n-space>
           <n-space align="center">
             <n-tag size="small"> 廣韻釋義 </n-tag>
-            <n-ellipsis style="max-width: 20em">
+            <n-ellipsis style="max-width: 16em">
               {{ entry.廣韻釋義 }}
               <template #tooltip>
                 <div style="max-width: 30em">
@@ -73,12 +67,32 @@ const settings = useSettingsStore();
           </n-space>
         </template>
       </n-space>
-    </n-space>
+    </div>
   </n-card>
 </template>
 
 <style scoped>
+.n-card {
+  max-width: 30em;
+  margin: 0 auto;
+}
+
 .n-tag {
   margin-right: -0.4em;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-wrap: nowrap;
+  align-items: left;
+}
+
+@media (min-width: 600px) {
+  .block {
+    flex-direction: row;
+    align-items: center;
+  }
 }
 </style>

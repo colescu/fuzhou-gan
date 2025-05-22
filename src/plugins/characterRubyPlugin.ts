@@ -1,12 +1,7 @@
 import type MarkdownIt from "markdown-it";
 import type Token from "markdown-it/lib/token.mjs";
 
-type CharacterRubyData = {
-  character: string;
-  pronunciation: string;
-};
-
-// [a]{b} -> <CharacterRuby :character="a" :pronunciation="b" />
+// [a]{b} -> <CharacterRuby :character="'a'" :pronunciation="'b'" />
 export default function characterRubyPlugin(md: MarkdownIt): void {
   const pattern = /^\[([^\]]+)\]\{([^}]+)\}/;
 
@@ -23,7 +18,7 @@ export default function characterRubyPlugin(md: MarkdownIt): void {
       token.content = {
         character: match[1],
         pronunciation: match[2],
-      } as unknown as string;
+      } as RubyData;
     }
 
     state.pos += match[0].length;
@@ -36,7 +31,7 @@ export default function characterRubyPlugin(md: MarkdownIt): void {
     tokens: Token[],
     idx: number
   ): string => {
-    const content = tokens[idx].content as unknown as CharacterRubyData;
+    const content = tokens[idx].content as unknown as RubyData;
     return `<CharacterRuby :character='${JSON.stringify(
       content.character
     )}' :pronunciation='${JSON.stringify(content.pronunciation)}' />`;

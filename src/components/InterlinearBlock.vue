@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { useSettingsStore } from "../stores/settings";
-import EntryUtils from "../lib/entryUtils";
-import { FGUtils, type FG } from "../lib/FGSyllable";
-import { isChineseCharacter } from "../lib/utils";
+import EntryUtils from "../library/entryUtils";
+import { isChineseCharacter } from "../library/utils";
 
+import Pronunciation from "./Pronunciation.vue";
 import EntryInline from "./EntryInline.vue";
 import { NPopover, NRadioGroup, NRadioButton } from "naive-ui";
 
@@ -16,11 +16,11 @@ const { char, entries } = defineProps<{
 }>();
 
 const choice = defineModel<number>({ default: 0 });
-const chosenFG = computed<FG | null>(() => {
+const chosenFGPronunciation = computed<string | null>(() => {
   const chosenEntry = entries[choice.value];
   return chosenEntry === undefined
     ? null
-    : FGUtils.parseIpa(EntryUtils.getFG(chosenEntry));
+    : EntryUtils.getFGPronunciation(chosenEntry);
 });
 
 const showPopover = ref<boolean>(false);
@@ -51,8 +51,9 @@ const showPopover = ref<boolean>(false);
               class="char clickable"
               :class="{
                 highlight:
-                  new Set(entries.map((entry) => EntryUtils.getFG(entry)))
-                    .size > 1,
+                  new Set(
+                    entries.map((entry) => EntryUtils.getFGPronunciation(entry))
+                  ).size > 1,
               }"
             >
               {{ char }}
@@ -77,13 +78,17 @@ const showPopover = ref<boolean>(false);
         </n-popover>
       </span>
 
-      <template v-if="chosenFG !== null">
-        <span class="pinyin" v-if="settings.displayPinyin">
-          {{ FGUtils.showPinyin(chosenFG, settings.pinyinToneNotation) }}
-        </span>
-        <span class="ipa" v-if="settings.displayIpa">
-          {{ FGUtils.showIpa(chosenFG, settings.ipaToneNotation) }}
-        </span>
+      <template v-if="chosenFGPronunciation !== null">
+        <Pronunciation
+          v-if="settings.displayPinyin"
+          :pronunciation="chosenFGPronunciation"
+          :phonetic-alphabet="'pinyin'"
+        />
+        <Pronunciation
+          v-if="settings.displayIpa"
+          :pronunciation="chosenFGPronunciation"
+          :phonetic-alphabet="'ipa'"
+        />
       </template>
     </div>
   </template>

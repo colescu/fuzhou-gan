@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { toRef, watch } from "vue";
+import { computed, ref, toRef, watch } from "vue";
 import { useSettingsStore } from "../stores/settings";
 import { useCacheStore } from "../stores/cache";
-import EntryUtils from "../lib/entryUtils";
+import { useManagedSequentialAudio } from "../composables/audio";
+import EntryUtils from "../library/entryUtils";
 
 import InterlinearBlock from "../components/InterlinearBlock.vue";
 import { NSpace, NInput, NButton, NIcon, NCard, useMessage } from "naive-ui";
-import { CloseCircle, CopyOutline } from "@vicons/ionicons5";
+import {
+  CloseCircle,
+  CopyOutline,
+  PlayCircleOutline,
+  StopCircleOutline,
+} from "@vicons/ionicons5";
 
 const settings = useSettingsStore();
 const cache = useCacheStore();
@@ -14,6 +20,21 @@ const message = useMessage();
 
 const input = toRef(cache.pronounce, "input");
 const outputChoices = toRef(cache.pronounce, "outputChoices");
+const phrase = computed<RubyData[]>(() =>
+  Array.from({ length: input.value.length }).map((_, index) => {
+    const char = input.value[index];
+    const entries = EntryUtils.getEntries(char, settings.includePredicted);
+    const chosenEntry = entries[outputChoices.value[index]];
+    const pronunciation =
+      chosenEntry === undefined
+        ? ""
+        : EntryUtils.getFGPronunciation(chosenEntry);
+    return {
+      character: char,
+      pronunciation: pronunciation,
+    } as RubyData;
+  })
+);
 
 watch(input, (newValue, oldValue) => {
   let left = 0,
@@ -37,19 +58,18 @@ watch(input, (newValue, oldValue) => {
 });
 
 async function copyToClipboard() {
-  const text = Array.from({ length: input.value.length })
-    .map((_, index) => {
-      const char = input.value[index];
-      const entries = EntryUtils.getEntries(char, settings.includePredicted);
-      const chosenEntry = entries[outputChoices.value[index]];
-      return chosenEntry === undefined
-        ? char
-        : `[${char}]{${EntryUtils.getFG(chosenEntry)}}`;
-    })
+  const text = phrase.value
+    .map((ruby) => `[${ruby.character}]{${ruby.pronunciation}}`)
     .join("");
   await window.navigator.clipboard.writeText(text);
-  message.success(settings.isSimplified ? "复制成功" : "複製成功");
+  message.success("複製成功");
 }
+
+const pronunciations = computed<string[]>(() =>
+  phrase.value.map((ruby) => ruby.pronunciation)
+);
+const isPlaying = ref<boolean>(false);
+const { toggleAudio } = useManagedSequentialAudio(pronunciations, isPlaying);
 </script>
 
 <template>
@@ -65,9 +85,7 @@ async function copyToClipboard() {
         }"
       />
       <n-button class="floating-icon" v-if="input" @click="input = ''" text>
-        <n-icon>
-          <CloseCircle />
-        </n-icon>
+        <n-icon :component="CloseCircle" />
       </n-button>
     </div>
     <div style="position: relative">
@@ -86,9 +104,13 @@ async function copyToClipboard() {
         @click="copyToClipboard"
         text
       >
-        <n-icon>
-          <CopyOutline />
-        </n-icon>
+        <n-icon :component="CopyOutline" />
+      </n-button>
+      <n-button class="play-button" v-if="input" @click="toggleAudio" text>
+        <n-icon
+          :component="isPlaying ? StopCircleOutline : PlayCircleOutline"
+          size="large"
+        />
       </n-button>
     </div>
   </n-space>
@@ -103,6 +125,13 @@ async function copyToClipboard() {
   position: absolute;
   bottom: 1.2em;
   right: 1em;
+  z-index: 1;
+}
+
+.play-button {
+  position: absolute;
+  top: 1.2em;
+  right: 0.8em;
   z-index: 1;
 }
 </style>

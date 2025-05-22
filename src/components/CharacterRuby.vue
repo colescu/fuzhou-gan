@@ -1,22 +1,30 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import { useSettingsStore } from "../stores/settings";
-import { FGUtils } from "../lib/FGSyllable";
 
-defineProps<{
+import Pronunciation from "./Pronunciation.vue";
+
+const route = useRoute();
+const settings = useSettingsStore();
+
+const { character, pronunciation } = defineProps<{
   character: string;
   pronunciation: string;
 }>();
 
-const settings = useSettingsStore();
+const mustShow = computed<boolean>(() => ["/phonology"].includes(route.path));
 </script>
 
 <template>
   <ruby>
     <span class="char">{{ character }}</span>
-    <template v-if="settings.displayPronunciation">
+    <template
+      v-if="pronunciation !== '' && (mustShow || settings.displayPronunciation)"
+    >
       <rp>(</rp>
-      <rt :class="settings.phoneticAlphabet">
-        {{ FGUtils.showPronunciation(pronunciation, settings) }}
+      <rt>
+        <Pronunciation :pronunciation="pronunciation" />
       </rt>
       <rp>)</rp>
     </template>
@@ -24,17 +32,10 @@ const settings = useSettingsStore();
 </template>
 
 <style scoped>
-.char {
-  text-align: center;
-}
-
 ruby rt {
   font-size: 0.8em;
   padding: 0 0.1em;
-  margin-top: 0.2em;
-}
-
-.ipa {
-  margin-left: 0.2em;
+  margin-top: 0.4em;
+  margin-bottom: 0.05em;
 }
 </style>

@@ -2,10 +2,12 @@
 import { computed, reactive, ref, toRef } from "vue";
 import { useSettingsStore } from "../stores/settings";
 import { useCacheStore } from "../stores/cache";
-import EntryUtils from "../lib/entryUtils";
-import { FGUtils, FormFGUtils, type FormFG } from "../lib/FGSyllable";
-import { FormMCUtils, type FormMC } from "../lib/MCSyllable";
+import EntryUtils from "../library/entryUtils";
+import { FormFGUtils, type FormFG } from "../library/FGSyllable";
+import { FormMCUtils, type FormMC } from "../library/MCSyllable";
 
+import Pronunciation from "../components/Pronunciation.vue";
+import MultipleSelect from "../components/MultipleSelect.vue";
 import EntryBlock from "../components/EntryBlock.vue";
 import {
   NSpace,
@@ -20,12 +22,18 @@ import {
   NGrid,
   NPagination,
 } from "naive-ui";
-import MultipleSelect from "../components/MultipleSelect.vue";
 
 const settings = useSettingsStore();
 const cache = useCacheStore();
 
 const searchResults = ref<Entry[]>([]);
+const resultsSet = computed<Set<string>>(
+  () =>
+    new Set(
+      searchResults.value.map((entry) => EntryUtils.getFGPronunciation(entry))
+    )
+);
+
 const searchInfo = ref<string>("");
 
 const page = ref(1);
@@ -98,10 +106,10 @@ const activeTab = toRef(cache.search, "tab");
   <n-space vertical>
     <n-card>
       <n-tabs
-        type="line"
         v-model:value="activeTab"
         default-value="char"
         @update:value="clearResults"
+        type="line"
         animated
       >
         <n-tab-pane name="char" tab="依字">
@@ -196,17 +204,13 @@ const activeTab = toRef(cache.search, "tab");
         v-if="activeTab !== 'char' && searchResults.length > 0"
         style="margin-bottom: 2em"
       >
-        可能的撫州話發音：<span :class="settings.phoneticAlphabet">
-          {{
-            [
-              ...new Set(
-                searchResults.map((entry) =>
-                  FGUtils.showPronunciation(EntryUtils.getFG(entry), settings)
-                )
-              ),
-            ].join(", ")
-          }}
-        </span>
+        可能的撫州話發音：
+        <template v-for="(pronunciation, index) of resultsSet">
+          <Pronunciation :pronunciation="pronunciation" /><span
+            v-if="index < resultsSet.size - 1"
+            >,
+          </span>
+        </template>
       </div>
       <div v-if="searchResults.length > 0" id="output">
         <EntryBlock v-for="entry of paginatedResults" :entry="entry" />

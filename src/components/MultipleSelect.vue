@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
+
 import { NSelect, type SelectOption } from "naive-ui";
 
-const props = defineProps<{
+const { modelValue, options, getLabel, all } = defineProps<{
   modelValue: string[];
   options: string[];
   getLabel?: (option: string) => string;
@@ -14,11 +15,11 @@ const emit = defineEmits<{
 }>();
 
 const allSelectOptions = computed<SelectOption[]>(() => {
-  const selectOptions = props.options.map((option: string) => ({
-    label: props.getLabel ? props.getLabel(option) : option,
+  const selectOptions = options.map((option: string) => ({
+    label: getLabel ? getLabel(option) : option,
     value: option,
   }));
-  if (props.all) {
+  if (all) {
     return [
       ...selectOptions,
       {
@@ -35,15 +36,15 @@ function handleSelect(value: string[]): void {
   emit(
     "update:modelValue",
     value.includes("__all__")
-      ? props.options
-      : value.filter((option) => props.options.includes(option))
+      ? options
+      : value.filter((option) => options.includes(option))
   );
 }
 </script>
 
 <template>
   <n-select
-    :value="props.modelValue"
+    :value="modelValue"
     :options="allSelectOptions"
     @update:value="handleSelect"
     placeholder=""

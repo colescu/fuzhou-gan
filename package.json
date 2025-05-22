@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@types/papaparse": "^5.3.15",
+    "@vicons/antd": "^0.13.0",
     "@vitejs/plugin-vue": "^5.2.2",
     "@vue/tsconfig": "^0.7.0",
     "gh-pages": "^6.3.0",

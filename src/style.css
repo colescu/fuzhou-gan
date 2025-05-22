@@ -3,29 +3,25 @@
   --gray: #f0f0f0;
 }
 
-body {
-  justify-content: center;
-  margin: 0;
-}
-
-main {
-  width: 80%;
-  margin: 0 auto;
-  margin-top: 5em;
-}
-
 h1 {
   font-size: 1.5em;
   font-weight: normal;
 }
 
-img {
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  display: inline-block;
+ul,
+ol {
+  padding-left: 1.5em;
+}
+
+a {
+  color: var(--colescu);
+  text-decoration: none;
+  position: relative;
 }
 
 figure {
+  display: table;
+  margin: 2em auto;
   text-align: center;
 }
 
@@ -48,7 +44,7 @@ th,
 td {
   border: 1px solid #ccc;
   text-align: center;
-  padding: 0.2em 1em;
+  padding: 0.2em 0.8em;
 }
 
 th {
@@ -76,6 +72,10 @@ table ruby rt {
 
 /* custom classes */
 
+.center {
+  text-align: center;
+}
+
 .highlight {
   background-color: var(--gray);
 }
@@ -88,25 +88,15 @@ table ruby rt {
   font-style: italic;
 }
 
+.ipa {
+}
+
 .reading-type {
   vertical-align: bottom;
   font-size: smaller;
 }
 
-.parallel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* for mobile devices */
-
-@media (max-width: 600px) {
-  main {
-    width: 90%;
-  }
-
-  .parallel {
-    flex-direction: column;
-  }
+.border {
+  border: 0.1em solid #ccc;
+  border-radius: 0.5em;
 }
