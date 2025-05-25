@@ -67,22 +67,22 @@ const IPA_TO_PINYIN_MAP: Record<string, Record<string, string>> = {
   },
 } as const;
 
-const PINYIN_TO_IPA_MAP: Record<
-  string,
-  Record<string, string>
-> = Object.fromEntries(
-  Object.keys(IPA_TO_PINYIN_MAP).map((part) => [
-    part,
-    Object.fromEntries(
-      Object.entries(IPA_TO_PINYIN_MAP[part]).map(([ipa, pinyin]) => [
-        pinyin,
-        ipa,
-      ])
-    ),
-  ])
-);
+// const PINYIN_TO_IPA_MAP: Record<
+//   string,
+//   Record<string, string>
+// > = Object.fromEntries(
+//   Object.keys(IPA_TO_PINYIN_MAP).map((part) => [
+//     part,
+//     Object.fromEntries(
+//       Object.entries(IPA_TO_PINYIN_MAP[part]).map(([ipa, pinyin]) => [
+//         pinyin,
+//         ipa,
+//       ])
+//     ),
+//   ])
+// );
 
-const CODA_STRICT_IPA_MAP: Record<string, string> = {
+const FINAL_STRICT_IPA_MAP: Record<string, string> = {
   p: "p",
   t: "t",
   k: "k",
@@ -120,7 +120,7 @@ export const FGUtils = {
       syllable.韻腹,
       notation === "raw"
         ? syllable.韻尾
-        : CODA_STRICT_IPA_MAP[syllable.韻尾] || syllable.韻尾,
+        : FINAL_STRICT_IPA_MAP[syllable.韻尾] || syllable.韻尾,
       notation === "raw" && syllable.聲調 === "0"
         ? "0"
         : TONE_NOTATION_MAP[syllable.聲調]?.[notation] || "",
@@ -141,7 +141,7 @@ export const FGUtils = {
       }
     }
 
-    const [initial, medial, nucleus, coda] = (
+    const [initial, medial, nucleus, final] = (
       ["聲母", "介音", "韻腹", "韻尾"] as (keyof FG)[]
     ).map((partName) => {
       const part = syllable[partName];
@@ -150,13 +150,13 @@ export const FGUtils = {
 
     switch (notation) {
       case "number":
-        return [initial, medial, nucleus, coda, syllable.聲調].join("");
+        return [initial, medial, nucleus, final, syllable.聲調].join("");
       case "diacritic":
         return [
           initial,
           medial,
           (nucleus + toneDiacritic).normalize("NFKC"),
-          coda,
+          final,
         ].join("");
     }
   },
@@ -192,14 +192,14 @@ export const FGUtils = {
       }
     }
 
-    const [medial, nucleus, coda] = parseRhyme(text.slice(initialLength, -1));
-    const tone = text[text.length - 1];
+    const [medial, nucleus, final] = parseRhyme(text.slice(initialLength, -1));
+    const tone = text.slice(-1);
 
     return {
       聲母: initial,
       介音: medial,
       韻腹: nucleus,
-      韻尾: coda,
+      韻尾: final,
       聲調: tone,
     };
   },

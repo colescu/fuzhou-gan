@@ -12,12 +12,7 @@ const activeTab = toRef(cache.vocabulary, "vocabulary");
 </script>
 
 <template>
-  <n-tabs
-    v-model:value="activeTab"
-    default-value="characters"
-    type="line"
-    animated
-  >
+  <n-tabs v-model:value="activeTab" type="line" animated>
     <n-tab-pane name="characters" tab="方言字">
       <!-- TODO -->
       待施工

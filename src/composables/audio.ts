@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import { useSettingsStore } from "../stores/settings";
 
 function getAudioUrl(pronunciation: string): string {
-  const tone = pronunciation[pronunciation.length - 1];
+  const tone = pronunciation.slice(-1);
   const equivalentTone = ["0", "6"].includes(tone) ? "1" : tone;
   return `${
     process.env.NODE_ENV === "production" ? import.meta.env.BASE_URL : ""

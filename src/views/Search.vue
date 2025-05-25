@@ -5,6 +5,7 @@ import { useCacheStore } from "../stores/cache";
 import EntryUtils from "../library/entryUtils";
 import { FormFGUtils, type FormFG } from "../library/FGSyllable";
 import { FormMCUtils, type FormMC } from "../library/MCSyllable";
+import { fetchCharsByGC, fetchCharsByPM } from "../library/fetchChars";
 
 import Pronunciation from "../components/Pronunciation.vue";
 import MultipleSelect from "../components/MultipleSelect.vue";
@@ -21,10 +22,12 @@ import {
   NFormItemGi,
   NGrid,
   NPagination,
+  useMessage,
 } from "naive-ui";
 
 const settings = useSettingsStore();
 const cache = useCacheStore();
+const message = useMessage();
 
 const searchResults = ref<Entry[]>([]);
 const resultsSet = computed<Set<string>>(
@@ -58,45 +61,72 @@ function setSearchInfo(): void {
       : `共查到 ${searchResults.value.length} 個字條`;
 }
 
-const formChar = ref<string>("");
-function searchChar(): void {
-  clearResults();
-  searchResults.value = [
+function wrapper(search: () => void) {
+  return async () => {
+    clearResults();
+    await search();
+    setSearchInfo();
+  };
+}
+
+function getEntries(chars: string[]): Entry[] {
+  return [
     ...new Set(
-      formChar.value
-        .split("")
+      chars
         .map((char) => EntryUtils.getEntries(char, settings.includePredicted))
         .flat()
     ),
   ];
-  setSearchInfo();
 }
+
+const formChar = ref<string>("");
+const searchChar = wrapper(() => {
+  searchResults.value = getEntries(formChar.value.split(""));
+});
 
 const formMC = reactive<FormMC>(FormMCUtils.getEmptyForm());
 const optionsMC = computed<FormMC>(() => FormMCUtils.computeOptions(formMC));
-function searchMC(formMC: FormMC): void {
-  clearResults();
+const searchMC = wrapper(() => {
   const checker = FormMCUtils.getChecker(formMC);
   searchResults.value = window.DICTIONARY.filter(
     (entry) =>
       (settings.includePredicted || !EntryUtils.isPredicted(entry)) &&
       checker(entry)
   );
-  setSearchInfo();
-}
+});
 
 const formFG = reactive<FormFG>(FormFGUtils.getEmptyForm());
 const optionsFG = computed<FormFG>(() => FormFGUtils.computeOptions(formFG));
-function searchFG(formFG: FormFG): void {
-  clearResults();
+const searchFG = wrapper(() => {
   const checker = FormFGUtils.getChecker(formFG);
   searchResults.value = window.DICTIONARY.filter(
     (entry) =>
       (settings.includePredicted || !EntryUtils.isPredicted(entry)) &&
       checker(entry)
   );
-  setSearchInfo();
-}
+});
+
+const formPM = ref<string>("");
+const searchPM = wrapper(async () => {
+  try {
+    const chars = await fetchCharsByPM(formPM.value);
+    searchResults.value = getEntries(chars);
+  } catch (error) {
+    console.error("Error fetching the Putonghua dictionary:", error);
+    message.error("錯誤：未能獲取普通話字典！");
+  }
+});
+
+const formGC = ref<string>("");
+const searchGC = wrapper(async () => {
+  try {
+    const chars = await fetchCharsByGC(formGC.value);
+    searchResults.value = getEntries(chars);
+  } catch (error) {
+    console.error("Error fetching the Cantonese dictionary:", error);
+    message.error("錯誤：未能獲取廣州話字典！");
+  }
+});
 
 export type SearchTab = "char" | "MC" | "FG" | "PM" | "GC";
 const activeTab = toRef(cache.search, "tab");
@@ -107,14 +137,14 @@ const activeTab = toRef(cache.search, "tab");
     <n-card>
       <n-tabs
         v-model:value="activeTab"
-        default-value="char"
         @update:value="clearResults"
         type="line"
+        scrollable
         animated
       >
         <n-tab-pane name="char" tab="依字">
           <n-space align="center">
-            <n-form inline style="max-width: 95%" @submit.prevent="searchChar">
+            <n-form inline style="max-width: 90%" @submit.prevent="searchChar">
               <n-form-item>
                 <n-input
                   v-model:value="formChar"
@@ -130,7 +160,7 @@ const activeTab = toRef(cache.search, "tab");
         </n-tab-pane>
 
         <n-tab-pane name="MC" tab="依中古漢語">
-          <n-form inline :model="formMC" @submit.prevent="searchMC(formMC)">
+          <n-form inline :model="formMC" @submit.prevent="searchMC">
             <n-grid cols="2 600:4" :x-gap="24">
               <n-form-item-gi
                 v-for="item of FormMCUtils.ITEMS"
@@ -162,7 +192,7 @@ const activeTab = toRef(cache.search, "tab");
         </n-tab-pane>
 
         <n-tab-pane name="FG" tab="依撫州話">
-          <n-form inline :model="formFG" @submit.prevent="searchFG(formFG)">
+          <n-form inline :model="formFG" @submit.prevent="searchFG">
             <n-grid cols="2 600:4" :x-gap="24">
               <n-form-item-gi
                 v-for="item of FormFGUtils.ITEMS"
@@ -192,9 +222,39 @@ const activeTab = toRef(cache.search, "tab");
           </n-form>
         </n-tab-pane>
 
-        <!-- <n-tab-pane name="PM" tab="依普通話"> TODO </n-tab-pane>
+        <n-tab-pane name="PM" tab="依普通話">
+          <n-space align="center">
+            <n-form inline style="max-width: 90%" @submit.prevent="searchPM">
+              <n-form-item>
+                <n-input
+                  v-model:value="formPM"
+                  placeholder="請輸入拼音"
+                  clearable
+                />
+              </n-form-item>
+              <n-form-item>
+                <n-button attr-type="submit" type="primary"> 查找 </n-button>
+              </n-form-item>
+            </n-form>
+          </n-space>
+        </n-tab-pane>
 
-        <n-tab-pane name="GC" tab="依廣州話"> TODO </n-tab-pane> -->
+        <n-tab-pane name="GC" tab="依廣州話">
+          <n-space align="center">
+            <n-form inline style="max-width: 90%" @submit.prevent="searchGC">
+              <n-form-item>
+                <n-input
+                  v-model:value="formGC"
+                  placeholder="請輸入拼音"
+                  clearable
+                />
+              </n-form-item>
+              <n-form-item>
+                <n-button attr-type="submit" type="primary"> 查找 </n-button>
+              </n-form-item>
+            </n-form>
+          </n-space>
+        </n-tab-pane>
       </n-tabs>
     </n-card>
 
