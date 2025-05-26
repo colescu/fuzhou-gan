@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, toRef } from "vue";
+import { computed, ref } from "vue";
 import { useSettingsStore } from "../stores/settings";
 import { useManagedSequentialAudio } from "../composables/audio";
 

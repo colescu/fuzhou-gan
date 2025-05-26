@@ -53,6 +53,7 @@ function useSequentialAudio(
     );
   }
 
+  // @ts-ignore
   let timer: ReturnType<typeof setTimeout> | null = null;
   let index = 0;
   let stopped = false;

@@ -1,0 +1,41 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure Git user
+        run: |
+          git config --global user.name "colescu"
+          git config --global user.email "yuluyuxiaoxie@gmail.com"
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set HTTPS remote URL
+        run: git remote set-url origin https://github.com/colescu/fuzhou-gan.git
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Copy index.html to 404.html
+        run: cp dist/index.html dist/404.html
+
+      - name: Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx gh-pages -d dist -r https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git

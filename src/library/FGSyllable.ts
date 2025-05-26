@@ -1,8 +1,3 @@
-import type {
-  PhoneticAlphabet,
-  IpaToneNotation,
-  PinyinToneNotation,
-} from "../stores/settings";
 import EntryUtils from "./entryUtils";
 import { getFormUtils, type Form } from "./formUtils";
 

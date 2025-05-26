@@ -1,9 +1,5 @@
 import { defineStore } from "pinia";
 
-export type PhoneticAlphabet = "ipa" | "pinyin";
-export type IpaToneNotation = "raw" | "letter" | "numeral";
-export type PinyinToneNotation = "number" | "diacritic";
-
 export const useSettingsStore = defineStore("settings", {
   state: () => ({
     phoneticAlphabet: "pinyin" as PhoneticAlphabet,
@@ -18,5 +14,3 @@ export const useSettingsStore = defineStore("settings", {
   }),
   persist: true,
 });
-
-export type SettingsStore = ReturnType<typeof useSettingsStore>;

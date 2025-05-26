@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useSettingsStore, type PhoneticAlphabet } from "../stores/settings";
+import { useSettingsStore } from "../stores/settings";
 import { useAudio } from "../composables/audio";
 import { FGUtils } from "../library/FGSyllable";
 

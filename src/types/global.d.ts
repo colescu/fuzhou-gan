@@ -1,5 +1,3 @@
-import type { SettingsStore as _SettingsStore } from "../stores/settings";
-
 export {};
 
 declare global {
@@ -41,5 +39,19 @@ declare global {
     pronunciation: string;
   };
 
-  type SettingsStore = _SettingsStore;
+  type PhoneticAlphabet = "ipa" | "pinyin";
+  type IpaToneNotation = "raw" | "letter" | "numeral";
+  type PinyinToneNotation = "number" | "diacritic";
+
+  type SettingsState = {
+    phoneticAlphabet: PhoneticAlphabet;
+    pinyinToneNotation: PinyinToneNotation;
+    ipaToneNotation: IpaToneNotation;
+    displayPinyin: boolean;
+    displayIpa: boolean;
+    includePredicted: boolean;
+    displayPronunciation: boolean;
+    isSimplified: boolean;
+    playSpeed: number;
+  };
 }
