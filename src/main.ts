@@ -1,31 +1,23 @@
-import { createApp } from "vue";
-import "./style.css";
+import { setupGoogleAnalytics } from "./analytics";
+
+import { ViteSSG } from "vite-ssg";
+import "./styles/main.css";
 import App from "./App.vue";
-import router from "./router";
-import { createPinia } from "pinia";
-import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import routerOptions from "./router/router";
+import createPiniaInstance from "./stores/pinia";
 
-import fetchData from "./library/fetchData";
-import CharacterRuby from "./components/CharacterRuby.vue";
-import Phrase from "./components/Phrase.vue";
+import { initCoreData } from "./library/data/core-data";
+import { initLangUtils } from "./library/lang-utils/init";
+import { registerComponents } from "./plugins/vue/registerComponents";
+import { ROUTES } from "./router/routes";
 
-async function bootstrap() {
-  const app = createApp(App);
+setupGoogleAnalytics();
 
-  // fetch data before mounting the app
-  await fetchData();
-
-  app.use(router);
-
-  const pinia = createPinia();
-  pinia.use(piniaPluginPersistedstate);
+export const createApp = ViteSSG(App, routerOptions, async ({ app }) => {
+  const pinia = createPiniaInstance();
   app.use(pinia);
 
-  // import globally for use in md files
-  app.component("CharacterRuby", CharacterRuby);
-  app.component("Phrase", Phrase);
+  await Promise.all([initCoreData(), initLangUtils(), registerComponents(app)]);
 
-  app.mount("#app");
-}
-
-bootstrap();
+  app.config.globalProperties.$ROUTES = ROUTES;
+});

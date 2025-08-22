@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+.vite-ssg-temp
+
 # Editor directories and files
 .vscode/
 .idea
@@ -21,7 +23,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.clocignore
 
 # Temporary or test files
 **/__*
 generate-credits.mjs
+public/data/

@@ -6,6 +6,9 @@
   ],
   "compilerOptions": {
     "typeRoots": ["node_modules/@types", "src/types"],
-    "strictNullChecks": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true
   }
 }

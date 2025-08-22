@@ -1,30 +1,54 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { BASE_URL } from "../library/fetchData";
+import { computed, onBeforeMount, ref } from "vue";
+import { dictionaryCache } from "@/library/data/core-data";
+import { lastUpdateCache, toChineseDate } from "@/library/data/date";
 
+import Fuzhouhua from "@/assets/撫州話.svg";
+
+const charactersCount = computed<number>(() => {
+  const DICTIONARY = dictionaryCache.get("FG");
+  return (
+    new Set(
+      DICTIONARY.filter(
+        (entry) => entry.字頭 !== "□" && entry.記錄讀音 != null
+      ).map((entry) => entry.字頭)
+    ).size + DICTIONARY.filter((entry) => entry.字頭 == "□").length
+  );
+});
 const entriesCount = computed<number>(
-  () => window.DICTIONARY.filter((entry) => entry.撫州話 !== "").length
+  () =>
+    dictionaryCache.get("FG").filter((entry) => entry.記錄讀音 != null).length
 );
 
-const lastUpdate = ref("2025 年 5 月 22 日");
-onMounted(async () => {
-  const response = await fetch(`${BASE_URL}/last-update.txt`);
-  if (response.ok) {
-    lastUpdate.value = await response.text();
+const lastUpdateFrontend = ref(__LAST_UPDATE__);
+onBeforeMount(async () => {
+  const lastUpdateBackend = await lastUpdateCache.getAsync();
+  if (
+    lastUpdateBackend &&
+    lastUpdateBackend > new Date(lastUpdateFrontend.value)
+  ) {
+    lastUpdateFrontend.value = lastUpdateBackend.toISOString();
   }
 });
 </script>
 
 <template>
-  <div class="center">
-    <img src="/assets/撫州話.svg" width="300" alt="撫州話" />
-    <div style="font-size: 1.5em">歡迎來到苦芋頭的撫州話網站</div>
+  <div id="home" class="center center-text">
+    <Fuzhouhua width="300" />
+    <div style="font-size: 1.5em; margin-top: 0.2em">
+      歡迎來到苦芋頭的撫州話網站
+    </div>
     <br />
     <div>
-      收錄字條數：{{ entriesCount }}<br />
-      更新時間：<span>{{ lastUpdate }}</span>
+      收錄撫州話 {{ charactersCount }} 字、{{ entriesCount }} 條讀音<br />
+      最後更新：{{ toChineseDate(lastUpdateFrontend) }}
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+#home {
+  flex-direction: column;
+  height: 65vh;
+}
+</style>

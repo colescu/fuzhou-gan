@@ -1,0 +1,36 @@
+.n-layout {
+  font-family: "Noto Sans SC", "Noto Sans TC", sans-serif;
+}
+
+/* .n-layout-content,
+.n-tabs-tab__label,
+.n-input__textarea,
+.interlinear {
+  font-size: 1.2em;
+} */
+
+.n-layout-scroll-container,
+.n-tabs-pane-wrapper {
+  overflow: visible !important;
+}
+
+.n-popover {
+  max-width: 90vw;
+}
+
+.n-float-button {
+  z-index: 10;
+}
+
+.n-switch {
+  display: flex;
+  align-items: center;
+}
+
+.n-radio-button {
+  user-select: text !important;
+}
+
+.n-radio-button * {
+  color: inherit !important;
+}

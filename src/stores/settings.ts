@@ -2,15 +2,15 @@ import { defineStore } from "pinia";
 
 export const useSettingsStore = defineStore("settings", {
   state: () => ({
-    phoneticAlphabet: "pinyin" as PhoneticAlphabet,
+    format: "pinyin" as Format, // preferred representation
+    displayBoth: true,
     pinyinToneNotation: "diacritic" as PinyinToneNotation,
     ipaToneNotation: "letter" as IpaToneNotation,
-    displayPinyin: true,
-    displayIpa: true,
     includePredicted: true,
-    displayPronunciation: true,
-    isSimplified: true,
     playSpeed: 500,
+    isSimplified: true,
+    colorizeChar: true,
+    orderingMCInfo: ["聲母", "攝", "韻系", "重紐", "等", "呼", "聲調"],
   }),
   persist: true,
 });

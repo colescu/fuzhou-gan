@@ -1,75 +1,125 @@
 <script setup lang="ts">
-import { toRef } from "vue";
-import { useCacheStore } from "../stores/cache";
+import { toRefs, type Component } from "vue";
+import { useHistoryStore } from "../stores/history";
+import { createNestedTabRoutingFactory } from "@/composables/useTabRouting";
+import { fromEntriesConst } from "@/library/common/object";
+import { LANGUAGE_MAP, LANGUAGES } from "../library/constants/language";
+
+import Initial from "../content/phonetics/initial.md";
+import Final from "../content/phonetics/final.md";
+import Tone from "../content/phonetics/tone.md";
+import Variations from "../content/phonetics/variations.md";
+import RhymeTable from "@/components/rhyme-table/RhymeTableTab.vue";
+
+import Characteristics from "../content/learn/characteristics.md";
+import Strata from "../content/learn/strata.md";
+import Mispronounceable from "../content/learn/mispronounceable.md";
+
+import Predict from "@/components/reflex-table/Predict.vue";
 
 import { NTabs, NTabPane } from "naive-ui";
-import Initial from "../content/fg-phonology/initial.md";
-import Rhyme from "../content/fg-phonology/rhyme.md";
-import Tone from "../content/fg-phonology/tone.md";
-import Characteristics from "../content/fg-historical-phonology/characteristics.md";
-import Prediction from "../content/fg-historical-phonology/prediction.md";
-import PM from "../content/fg-comparative-phonology/PM.md";
-import GC from "../content/fg-comparative-phonology/GC.md";
 
-const cache = useCacheStore();
+const modules = import.meta.glob(`../content/compare/*.md`, {
+  eager: true,
+}) as Record<string, { default: Component }>;
+const LANGUAGE_COMPONENTS = fromEntriesConst(
+  (["PM"] as const).map((language) => [
+    language,
+    modules[`../content/compare/${language}.md`]!.default,
+  ])
+);
 
-export type PhonologyTab = "FG" | "MC" | "other";
-const activeTab = toRef(cache.phonology, "phonology");
-export type PhonologyFGTab = "initial" | "rhyme" | "tone";
-const activeFGTab = toRef(cache.phonology, "FG");
-export type PhonologyMCTab = "characteristics" | "prediction";
-const activeMCTab = toRef(cache.phonology, "MC");
-export type PhonologyOtherTab = "PM";
-const activeOtherTab = toRef(cache.phonology, "other");
+const history = useHistoryStore();
+const { tab, phoneticsSubtab, learnSubtab } = toRefs(history.phonology);
+
+const tabNode = {
+  queryName: "tab",
+  store: tab,
+  tabs: ["phonetics", "learn", "prediction"],
+};
+const phoneticsNode = {
+  queryName: "phonetics-subtab",
+  store: phoneticsSubtab,
+  tabs: ["initial", "final", "tone", "variations", "rhyme-table"],
+  parent: tabNode,
+  parentValue: "phonetics",
+};
+const learnNode = {
+  queryName: "learn-subtab",
+  store: learnSubtab,
+  tabs: ["characteristics", "mispronounceable", "strata", ...LANGUAGES],
+  parent: tabNode,
+  parentValue: "learn",
+};
+
+const factory = createNestedTabRoutingFactory();
+factory.setupTabRouting(tabNode);
+factory.setupTabRouting(phoneticsNode);
+factory.setupTabRouting(learnNode);
 </script>
 
 <template>
-  <n-tabs v-model:value="activeTab" type="line" animated>
-    <n-tab-pane name="FG" tab="聲韻調與拼音">
-      <div style="margin-bottom: 1.5em">
-        <p>撫州話有一千二百餘個音節（不計聲調則約五百）。</p>
-      </div>
-      <n-tabs v-model:value="activeFGTab" type="card" animated>
+  <n-tabs v-model:value="tab" type="line" size="large" animated>
+    <n-tab-pane name="phonetics" tab="聲韻調與拼音">
+      <n-tabs v-model:value="phoneticsSubtab" type="card" size="small" animated>
         <n-tab-pane name="initial" tab="聲母">
           <Initial />
         </n-tab-pane>
-        <n-tab-pane name="rhyme" tab="韻母">
-          <Rhyme />
+        <n-tab-pane name="final" tab="韻母">
+          <Final />
         </n-tab-pane>
         <n-tab-pane name="tone" tab="聲調">
           <Tone />
         </n-tab-pane>
+        <n-tab-pane name="rhyme-table" tab="韻圖">
+          <RhymeTable />
+        </n-tab-pane>
+        <!-- TODO 語音學細節
+         元音舌位圖
+         調值圖
+         輕聲調值
+         -->
+        <n-tab-pane name="variations" tab="變體">
+          <Variations />
+        </n-tab-pane>
       </n-tabs>
     </n-tab-pane>
 
-    <n-tab-pane name="MC" tab="對應中古音">
-      <div style="height: 0.5em"></div>
-      <n-tabs v-model:value="activeMCTab" type="card" animated>
+    <n-tab-pane name="learn" tab="學話撫州話">
+      <n-tabs v-model:value="learnSubtab" type="card" size="small" animated>
         <n-tab-pane name="characteristics" tab="音韻特徵">
           <Characteristics />
         </n-tab-pane>
-        <n-tab-pane name="prediction" tab="推導規則">
-          <Prediction />
+        <n-tab-pane name="strata" tab="文白異讀">
+          <Strata />
+        </n-tab-pane>
+        <!-- <n-tab-pane name="mispronounceable" tab="易錯字">
+          <Mispronounceable />
+        </n-tab-pane> -->
+        <n-tab-pane
+          v-for="(component, language) in LANGUAGE_COMPONENTS"
+          :key="language"
+          :name="language"
+          :tab="`對應${LANGUAGE_MAP[language]}`"
+        >
+          <component :is="component" />
         </n-tab-pane>
       </n-tabs>
+
+      <Teleport to="#help">
+        「≈」表示僅聲調不同。<br />
+        default
+      </Teleport>
     </n-tab-pane>
 
-    <n-tab-pane name="other" tab="對應其他方言">
-      <div style="height: 0.5em"></div>
-      <n-tabs v-model:value="activeOtherTab" type="card" animated>
-        <n-tab-pane name="PM" tab="普通話">
-          <PM />
-        </n-tab-pane>
-        <n-tab-pane name="GC" tab="廣州話">
-          <GC />
-        </n-tab-pane>
-      </n-tabs>
+    <n-tab-pane name="prediction" tab="推導器">
+      <Predict />
     </n-tab-pane>
   </n-tabs>
 </template>
 
 <style scoped>
-:deep(.example-table td:last-child) {
-  text-align: left;
+:deep(.before-main) {
+  margin-bottom: 1.5em;
 }
 </style>

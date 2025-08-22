@@ -1,0 +1,32 @@
+@import "./variables.css";
+
+@import "./elements.css";
+@import "./table.css";
+@import "./naive-ui.css";
+@import "./common.css";
+
+@import url("//fonts.googleapis.com/earlyaccess/notosanssc.css");
+@import url("//fonts.googleapis.com/earlyaccess/notosanstc.css");
+@import url("//fonts.googleapis.com/earlyaccess/notosansjp.css");
+@import url("//fonts.googleapis.com/earlyaccess/notosanskr.css");
+
+@font-face {
+  font-family: "Pinyin";
+  src: url("/fonts/Pinyin.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Charis Regular";
+  src: url("/fonts/Charis-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* @font-face {
+  font-family: "Babel Stone Han";
+  src: url("/fonts/BabelStoneHan.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+} */

@@ -1,0 +1,13 @@
+:root {
+  --colescu: #008778;
+  --colescu-light: #6cb4b1;
+  --colescu-dark: #006f66;
+
+  /* hard to configure in Naive UI */
+  --background-color: #fff;
+  --text-color: #333639;
+
+  --light-gray: #f0f0f0;
+  --dark-gray: #9ca3af;
+  --light-black: rgba(0, 0, 0, 0.7);
+}

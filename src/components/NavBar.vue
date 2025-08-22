@@ -7,11 +7,11 @@ import FuIcon from "@/assets/撫.svg";
 </script>
 
 <template>
-  <div class="navbar-header">
+  <div id="navbar" class="navbar-header">
     <div class="navbar-left">
       <RouterLink to="/">
         <n-button text icon>
-          <FuIcon style="width: 2.5em; padding-top: 0.3em" />
+          <FuIcon style="width: 2.5em; padding-top: 0.5em" />
         </n-button>
       </RouterLink>
     </div>
@@ -19,12 +19,12 @@ import FuIcon from "@/assets/撫.svg";
     <div class="navbar-center">
       <n-space>
         <RouterLink to="/introduction">
-          <n-button text>介紹</n-button>
+          <n-button text>關於</n-button>
         </RouterLink>
         <RouterLink to="/phonology">
-          <n-button text>發音</n-button>
+          <n-button text>音系</n-button>
         </RouterLink>
-        <RouterLink to="/vocbulary">
+        <RouterLink to="/vocabulary">
           <n-button text>詞彙</n-button>
         </RouterLink>
         <RouterLink to="/search">
@@ -56,13 +56,17 @@ import FuIcon from "@/assets/撫.svg";
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 3.5em;
+  height: min-content;
   padding: 0 0.5em;
   background-color: var(--colescu);
+}
+
+.n-button {
+  font-size: 1.1em;
 }
 
 .navbar-left,
@@ -73,7 +77,7 @@ import FuIcon from "@/assets/撫.svg";
 }
 
 .n-button {
-  color: aliceblue;
-  padding: 0 0.2em;
+  color: #fff;
+  padding: 0 0.15em;
 }
 </style>
