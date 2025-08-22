@@ -1,0 +1,1 @@
+function c(s){const r=[],t=[];for(let n=0;n<s.rows.length;n++){const e=s.rows[n];let o=0;Array.from(e.cells).forEach(a=>{for(;t[o]>0;)t[o]--,o++;(r[o]||=[]).push(a),a.rowSpan>1&&(t[o]=a.rowSpan-1),o++})}return r}function f(s,r,t){s[0].textContent===r&&s.slice(1).forEach(n=>{n.innerHTML=`<span class="${t}">${n.textContent}</span>`})}export{f as a,c as g};

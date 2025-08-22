@@ -1,0 +1,1 @@
+function i(o,n){const s=(o+1)%n;return(n-s)%n}function p(o){const n=o.length;if(n===0)return[];const c=o[0].length,s=Array(n).fill(0).map(()=>Array(c).fill(1));for(let t=0;t<c;t++){let e=0;for(;e<n;){let r=e+1;for(;r<n&&o[r][t]===o[e][t];)r++;const f=r-e;s[e][t]=f;for(let l=e+1;l<r;l++)s[l][t]=0;e=r}}return s}export{p as a,i as c};
